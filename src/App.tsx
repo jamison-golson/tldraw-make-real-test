@@ -5,12 +5,21 @@ import { MakeRealButton } from './components/MakeRealButton'
 import { TldrawLogo } from './components/TldrawLogo'
 import RiskyButCoolAPIKeyInput from "./components/RiskyButCoolAPIKeyInput"
 import { PreviewShapeUtil } from './PreviewShape/PreviewShape'
+import MyDialog from "./components/ApiKeyHandler"
 
 const CustomSharePanel = () => {
 	return(
 		<div>
+			<RiskyButCoolAPIKeyInput />
+		</div>
+	)
+}
+
+const CustomTopPanel = () => {
+	return(
+		<div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+			<MyDialog onClose={() => console.log("Dialog closed")} />
 			<MakeRealButton />
-			{/* <RiskyButCoolAPIKeyInput /> */}
 			{/* <TldrawLogo /> */}
 		</div>
 	)
@@ -20,8 +29,8 @@ const CustomSharePanel = () => {
 const shapeUtils = [PreviewShapeUtil]
 
 const components: TLComponents = {
-	SharePanel: RiskyButCoolAPIKeyInput,
-	TopPanel: CustomSharePanel,
+	SharePanel: CustomSharePanel,
+	TopPanel: CustomTopPanel,
 }
 
 export default function App() {
