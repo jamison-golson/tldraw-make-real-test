@@ -63,6 +63,8 @@ import {
 } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { ChangeEvent, useCallback, useState } from 'react'
+import { useEditor } from 'tldraw';
+
 
 // Define types for our providers and models
 type Provider = 'Anthropic' | 'OpenAI' 
@@ -97,6 +99,36 @@ function MyDialog({ onClose }: { onClose(): void }) {
 		setSelectedModel(model);
 	}, []);
 
+	const editor = useEditor();
+	
+	//Used to export canvas data
+	//Works for now but implement next tldraw.editor.getSnapshot()
+	const handleExport = () => {
+		const snapshot = editor.store.getSnapshot();
+		const dataStr = JSON.stringify(snapshot);
+		const blob = new Blob([dataStr], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'tldraw-data.json';
+		a.click();
+		URL.revokeObjectURL(url);
+	};
+
+	const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+		  const reader = new FileReader();
+		  reader.onload = (e) => {
+			const dataStr = e?.target?.result as string | null;
+			if (dataStr) {
+			  const snapshot = JSON.parse(dataStr);
+			  editor.store.loadSnapshot(snapshot);
+			}
+		  };
+		  reader.readAsText(file);
+		}
+	  };
 
 
 	// // Define providers and their models with proper typing
@@ -208,6 +240,10 @@ function MyDialog({ onClose }: { onClose(): void }) {
 				<TldrawUiButton type="primary" onClick={onClose}>
 					<TldrawUiButtonLabel>Save</TldrawUiButtonLabel>
 				</TldrawUiButton>
+				<TldrawUiButton type="primary" onClick={handleExport}>
+					<TldrawUiButtonLabel>Export Data</TldrawUiButtonLabel>
+				</TldrawUiButton>
+				<input type="file" accept="application/json" onChange={handleImport} />;
 			</TldrawUiDialogFooter>
 		</>
 	)

@@ -7,6 +7,9 @@ import RiskyButCoolAPIKeyInput from "./components/RiskyButCoolAPIKeyInput"
 import { PreviewShapeUtil } from './PreviewShape/PreviewShape'
 import MyDialog from "./components/ApiKeyHandler"
 
+import { useEditor } from 'tldraw';
+
+
 const CustomSharePanel = () => {
 	return(
 		<div>

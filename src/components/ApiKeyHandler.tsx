@@ -10,7 +10,7 @@ import {
 import { ChangeEvent, useCallback, useState } from 'react'
 
 // Define types for our providers and models
-type Provider = 'Anthropic' | 'OpenAI' | 'Cohere' | 'Mistral'
+type Provider = 'Anthropic' | 'OpenAI' //| 'Cohere' | 'Mistral'
 type ProviderModels = {
 	[K in Provider]: string[]
 }
@@ -39,8 +39,8 @@ function ApiKeyHandler({ onClose }: { onClose(): void }) {
 	const providerModels = {
 		'Anthropic': ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
 		'OpenAI': ['gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o', 'gpt-4o-mini'],
-		'Cohere': ['command-nightly', 'command-light'],
-		'Mistral': ['mistral-large', 'mistral-medium'],
+		// 'Cohere': ['command-nightly', 'command-light'],
+		// 'Mistral': ['mistral-large', 'mistral-medium'],
 	};
 
 	return (
