@@ -162,6 +162,7 @@ export async function getHtmlFromModel({
 
 	if (provider === 'Anthropic') {
 		try {
+			// http://localhost:3002/api/claude
 		  const response = await fetch('http://localhost:3001/api/claude', {
 			method: 'POST',
 			headers: {

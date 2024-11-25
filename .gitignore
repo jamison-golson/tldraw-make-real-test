@@ -9,9 +9,12 @@ server/node_modules
 
 # testing
 /coverage
+llm_backend_test.ipynb
+TODOs.txt
 
 # production
 /build
+eslintrc.json:Zone.Identifier
 
 # misc
 .DS_Store

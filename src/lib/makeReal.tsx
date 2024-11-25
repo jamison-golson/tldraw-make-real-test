@@ -6,25 +6,25 @@ import { addGridToSvg } from './addGridToSvg'
 import { PreviewShape } from '../PreviewShape/PreviewShape'
 
 // Function to automatically download the svg passed to the LLM (Grid lines included)
-//   function saveSvgToFile(svgElement: SVGSVGElement): void {
-// 	const serializer = new XMLSerializer();
-// 	const svgString = serializer.serializeToString(svgElement);
-// 	const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-// 	const fileName = `tldraw_${timestamp}.svg`;
+  function saveSvgToFile(svgElement: SVGSVGElement): void {
+	const serializer = new XMLSerializer();
+	const svgString = serializer.serializeToString(svgElement);
+	const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+	const fileName = `tldraw_${timestamp}.svg`;
 	
-// 	try {
-// 	  const blob = new Blob([svgString], { type: 'image/svg+xml' });
-// 	  const url = URL.createObjectURL(blob);
-// 	  const link = document.createElement('a');
-// 	  link.href = url;
-// 	  link.download = fileName;
-// 	  link.click();
-// 	  URL.revokeObjectURL(url);
-// 	  console.log('SVG saved successfully');
-// 	} catch (err) {
-// 	  console.error('Error saving SVG to file:', err);
-// 	}
-//   }
+	try {
+	  const blob = new Blob([svgString], { type: 'image/svg+xml' });
+	  const url = URL.createObjectURL(blob);
+	  const link = document.createElement('a');
+	  link.href = url;
+	  link.download = fileName;
+	  link.click();
+	  URL.revokeObjectURL(url);
+	  console.log('SVG saved successfully');
+	} catch (err) {
+	  console.error('Error saving SVG to file:', err);
+	}
+  }
 
 export async function makeReal(editor: Editor, apiKey: string) {
 	// Get the selected shapes (we need at least one)
@@ -100,6 +100,7 @@ export async function makeReal(editor: Editor, apiKey: string) {
 			provider: localStorage.getItem('makeitreal_provider') as 'OpenAI' | 'Anthropic' || 'OpenAI', // Default to 'OpenAI' if null
 			model: localStorage.getItem('makeitreal_model') || undefined, // Use undefined if null
 		})
+		
 
 		if (!json) {
 			throw Error('Could not contact OpenAI.')
@@ -110,7 +111,7 @@ export async function makeReal(editor: Editor, apiKey: string) {
 		}
 
 		// Extract the HTML from the response
-		const message = localStorage.getItem('makeitreal_provider') == 'OpenAI' ? json.choices[0].message.content : json.content[0].text
+		const message = localStorage.getItem('makeitreal_provider') == 'OpenAI' ? json.choices[0].message.content : json["content"]
 		const start = message.indexOf('<!DOCTYPE html>')
 		const end = message.indexOf('</html>')
 		const html = message.slice(start, end + '</html>'.length)

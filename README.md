@@ -3,16 +3,18 @@
 Use this repo as a template to create Make Real style apps like
 [makereal.tldraw.com](https://makereal.tldraw.com). To get started:
 
-1. Use the template and clone your new repo to your computer
+1. Clone the repo using git clone and cd to new dir
 2. Run `npm install` to install dependencies
 3. Get an OpenAI API key from [platform.openai.com/api-keys](https://platform.openai.com/api-keys). Make sure
    you are at least a
    [Tier 1](https://platform.openai.com/docs/guides/rate-limits/usage-tiers) API
    user, which means you have access to GPT-4 Vision. You can check your tier on
    the [OpenAI API Limits](https://platform.openai.com/account/limits).
-4. Create a `.env.local` file that contains `OPENAI_API_KEY=your api key here`
-5. Run `npm run dev`
-6. Open [localhost:3000](http://localhost:3000) and make some stuff real!
+4. Run `npm start`
+5. cd to server, create an .env file and store your ANTHROPIC_API_KEY in it
+6. run node server.js to get access to anthropic models (Because of CORS issues, I had to use a server for claude inference)
+7. Open [localhost:3000](http://localhost:3000) 
+8. Press the 'RiskyButCoolAPIKeyInput', enter your OPENAI API key and make some stuff real!
 
 ## How it works
 

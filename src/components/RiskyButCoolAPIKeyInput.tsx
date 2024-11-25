@@ -347,7 +347,7 @@ export default function RiskyButCoolAPIKeyInput() {
 					})
 				}}
 			>
-				Show simple dialog
+				RiskyButCoolAPIKeyInput
 			</button>
 		</div>
 	)

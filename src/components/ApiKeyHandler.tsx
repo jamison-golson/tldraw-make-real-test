@@ -17,7 +17,7 @@ type ProviderModels = {
 
 function ApiKeyHandler({ onClose }: { onClose(): void }) {
 	const [selectedProvider, setSelectedProvider] = useState<Provider>('Anthropic');
-	const [selectedModel, setSelectedModel] = useState<string>('claude-3-5-sonnet-20241022');
+	const [selectedModel, setSelectedModel] = useState<string>('claude-3-5-sonnet');
 
 	// Store the API key in localStorage when Enter is pressed
 	const handleComplete = useCallback((value: string) => {
@@ -37,7 +37,7 @@ function ApiKeyHandler({ onClose }: { onClose(): void }) {
 	}, []);
 
 	const providerModels = {
-		'Anthropic': ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
+		'Anthropic': ['claude-3.5-sonnet', 'claude-3.5-haiku', 'claude-3-opus', 'gemini-1.5-flash-8b-latest'],
 		'OpenAI': ['gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o', 'gpt-4o-mini'],
 		// 'Cohere': ['command-nightly', 'command-light'],
 		// 'Mistral': ['mistral-large', 'mistral-medium'],
