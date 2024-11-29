@@ -74,16 +74,84 @@ app.post('/api/gemini', async (req, res) => {
     console.log('Received Gemini request body size:', JSON.stringify(req.body).length);
     console.log('Received Gemini request body:', JSON.stringify(req.body, null, 2));
 
+    // First, upload the file if there's an image
+    let fileUri = null;
+    if (req.body.image) {
+      // Convert base64 to temporary file
+      const tempFilePath = './temp-image.png';
+      const imageBuffer = Buffer.from(req.body.image.split(',')[1], 'base64');
+      fs.writeFileSync(tempFilePath, imageBuffer);
+
+      // Upload file to Gemini
+      const formData = new FormData();
+      const fileStats = fs.statSync(tempFilePath);
+      
+      const uploadResponse = await axios({
+        method: 'post',
+        url: `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${process.env.GEMINI_API_KEY}`,
+        headers: {
+          'X-Goog-Upload-Command': 'start, upload, finalize',
+          'X-Goog-Upload-Header-Content-Length': fileStats.size,
+          'X-Goog-Upload-Header-Content-Type': 'application/octet-stream',
+          'Content-Type': 'application/json',
+          ...formData.getHeaders()
+        },
+        data: {
+          file: {
+            display_name: 'temp-image.png'
+          }
+        }
+      });
+
+      fileUri = uploadResponse.data.uri;
+      fs.unlinkSync(tempFilePath); // Clean up temp file
+    }
+
+    // Prepare the content for Gemini API
+    const content = {
+      contents: [
+        {
+          role: "user",
+          parts: []
+        }
+      ],
+      generationConfig: {
+        temperature: 1,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 8192,
+        responseMimeType: "text/plain"
+      }
+    };
+
+    // Add image if available
+    if (fileUri) {
+      content.contents[0].parts.push({
+        fileData: {
+          fileUri: fileUri,
+          mimeType: "application/octet-stream"
+        }
+      });
+    }
+
+    // Add text prompt
+    if (req.body.prompt) {
+      content.contents[0].parts.push({
+        text: req.body.prompt
+      });
+    }
+
+    // Make the generation request
     const response = await axios.post(
-      'https://api.gemini.com/v1/messages',
-      req.body,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      content,
       {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.GEMINI_API_KEY}`
+          'Content-Type': 'application/json'
         }
       }
     );
+
     res.json(response.data);
   } catch (error) {
     console.error('Gemini Error details:', error.response?.data || error.message);
@@ -93,6 +161,8 @@ app.post('/api/gemini', async (req, res) => {
     });
   }
 });
+
+
 
 // Ollama endpoint
 app.post('/api/ollama', async (req, res) => {

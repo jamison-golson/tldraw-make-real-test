@@ -97,7 +97,7 @@ export async function makeReal(editor: Editor, apiKey: string) {
 			previousPreviews,
 			grid,
 			theme: editor.user.getUserPreferences().isDarkMode ? 'dark' : 'light',
-			provider: localStorage.getItem('makeitreal_provider') as 'OpenAI' | 'Anthropic' || 'OpenAI', // Default to 'OpenAI' if null
+			provider: localStorage.getItem('makeitreal_provider') as 'OpenAI' | 'Anthropic' | 'Gemini' || 'OpenAI', // Default to 'OpenAI' if null
 			model: localStorage.getItem('makeitreal_model') || undefined, // Use undefined if null
 		})
 
@@ -110,7 +110,7 @@ export async function makeReal(editor: Editor, apiKey: string) {
 		}
 
 		// Extract the HTML from the response
-		const message = localStorage.getItem('makeitreal_provider') == 'OpenAI' ? json.choices[0].message.content : json.content[0].text
+		const message = localStorage.getItem('makeitreal_provider') == 'OpenAI' ? json.choices[0].message.content : json.content
 		const start = message.indexOf('<!DOCTYPE html>')
 		const end = message.indexOf('</html>')
 		const html = message.slice(start, end + '</html>'.length)

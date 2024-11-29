@@ -1,46 +1,3 @@
-// //Add back in Icon into first import statement
-// import {  useBreakpoint, TldrawUiButton, TldrawUiButtonLabel, TldrawUiInput, TldrawUiDialogBody } from 'tldraw'
-// import { ChangeEvent, useCallback } from 'react'
-
-// export function RiskyButCoolAPIKeyInput() {
-// 	const breakpoint = useBreakpoint()
-
-// 	// Store the API key in localStorage when Enter is pressed
-// 	const handleComplete = useCallback((value: string) => {
-// 		localStorage.setItem('makeitreal_key', value);
-// 	}, []);
-
-// 	const handleQuestionMessage = useCallback(() => {
-// 		window.alert(
-// 			`If you have an OpenAI developer key, you can put it in this input and it will be used when posting to OpenAI.\n\nSee https://platform.openai.com/api-keys to get a key.\n\nPutting API keys into boxes is generally a bad idea! If you have any concerns, create an API key and then revoke it after using this site.`
-// 		)
-// 	}, [])
-
-// 	return (
-// 		<div style={{ display: 'flex'}}>
-// 			<TldrawUiDialogBody>
-// 				<div style={{display: 'flex'}}>
-// 					<TldrawUiInput
-// 						className="openai_key_risky_but_cool"
-// 						// label="API-key"
-// 						defaultValue={
-// 							localStorage.getItem('makeitreal_key') ?? process.env.OPENAI_API_KEY ?? 'Please Enter an API KEY'
-// 						}
-// 						onComplete={handleComplete} // Store the value on Enter
-// 						autoFocus= {true}
-// 						disabled= {false}
-// 					/>
-// 				</div>
-// 				<TldrawUiButton type="normal" onClick={handleQuestionMessage}>
-// 					<TldrawUiButtonLabel>API-key</TldrawUiButtonLabel>
-// 				</TldrawUiButton>
-// 			</TldrawUiDialogBody>
-// 		</div>
-// 	);
-// }
-
-
-
 import {
 	TLComponents,
 	Tldraw,
@@ -67,15 +24,11 @@ import { useEditor } from 'tldraw';
 
 
 // Define types for our providers and models
-type Provider = 'Anthropic' | 'OpenAI' 
+type Provider = 'Anthropic' | 'OpenAI' | 'Gemini'
 type ProviderModels = {
 	[K in Provider]: string[]
 }
 
-
-// There's a guide at the bottom of this file
-
-// [1]
 function MyDialog({ onClose }: { onClose(): void }) {
 	const [selectedProvider, setSelectedProvider] = useState<Provider>('Anthropic');
 	const [selectedModel, setSelectedModel] = useState<string>('claude-3-5-sonnet-20241022');
@@ -100,7 +53,7 @@ function MyDialog({ onClose }: { onClose(): void }) {
 	}, []);
 
 	const editor = useEditor();
-	
+
 	//Used to export canvas data
 	//Works for now but implement next tldraw.editor.getSnapshot()
 	const handleExport = () => {
@@ -118,42 +71,33 @@ function MyDialog({ onClose }: { onClose(): void }) {
 	const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
-		  const reader = new FileReader();
-		  reader.onload = (e) => {
-			const dataStr = e?.target?.result as string | null;
-			if (dataStr) {
-			  const snapshot = JSON.parse(dataStr);
-			  editor.store.loadSnapshot(snapshot);
-			}
-		  };
-		  reader.readAsText(file);
+			const reader = new FileReader();
+			reader.onload = (e) => {
+				const dataStr = e?.target?.result as string | null;
+				if (dataStr) {
+					const snapshot = JSON.parse(dataStr);
+					editor.store.loadSnapshot(snapshot);
+				}
+			};
+			reader.readAsText(file);
 		}
-	  };
-
-
-	// // Define providers and their models with proper typing
-	// const providerModels: ProviderModels = {
-	// 	'Anthropic': [
-	// 		'claude-3-5-sonnet-20241022',
-	// 		'claude-2-1'
-	// 	],
-	// 	'OpenAI': [
-	// 		'gpt-4-turbo',
-	// 		'gpt-3.5-turbo'
-	// 	],
-	// 	'Cohere': [
-	// 		'command-nightly',
-	// 		'command-light'
-	// 	],
-	// 	'Mistral': [
-	// 		'mistral-large',
-	// 		'mistral-medium'
-	// 	]
-	// };
+	};
 
 	const providerModels = {
 		'Anthropic': ['claude-3-5-sonnet-latest', 'claude-3-haiku-20240307', 'claude-3-opus-latest'],
 		'OpenAI': ['gpt-4-turbo', 'gpt-3.5-turbo'],
+		'Gemini': ['gemini-pro',
+			'gemini-1.5-pro-latest',
+			'gemini-1.5-flash-latest',
+			'gemini-1.5-pro-001',
+			'gemini-1.5-flash-001',
+			'gemini-1.5-pro-002',
+			'gemini-1.5-flash-002',
+			'gemini-1.5-flash-8b-latest',
+			'gemini-1.5-flash-8b-001',
+			'gemini-exp-1114',
+			'gemini-exp-1121'
+		]
 		// 'Cohere': ['command-nightly', 'command-light'],
 		// 'Mistral': ['mistral-large', 'mistral-medium'],
 	};
@@ -249,57 +193,6 @@ function MyDialog({ onClose }: { onClose(): void }) {
 	)
 }
 
-// function APIKeysModal({ onClose }: { onClose: () => void }) {
-// 	const handleComplete = useCallback((value: string) => {
-// 		localStorage.setItem('makeitreal_key', value);
-// 	}, []);
-
-// 	return (
-// 		<>
-// 			{/* OpenAI API Key Input */}
-// 			<div style={{ marginBottom: 16 }}>
-// 				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-// 					<label>OpenAI API key</label>
-// 					<TldrawUiButton type="normal" style={{ padding: 4 }}>
-// 						<TldrawUiButtonIcon icon="question-mark" />
-// 					</TldrawUiButton>
-// 				</div>
-// 				<TldrawUiInput
-// 					className="openai_key_risky_but_cool"
-// 					placeholder="risky but cool"
-// 					defaultValue={localStorage.getItem('makeitreal_key') ?? ''}
-// 					onComplete={handleComplete}
-// 				/>
-// 			</div>
-
-// 			{/* Anthropic API Key Input */}
-// 			<div>
-// 				<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-// 					<label>Anthropic API key</label>
-// 					<TldrawUiButton type="normal" style={{ padding: 4 }}>
-// 						<TldrawUiButtonIcon icon="question-mark" />
-// 					</TldrawUiButton>
-// 				</div>
-// 				<TldrawUiInput placeholder="risky but cool"
-// 					defaultValue={localStorage.getItem('makeitreal_key') ?? ''}
-// 					onComplete={handleComplete}/>
-// 			</div>
-// 		</>
-// 	);
-// }
-
-
-// // [2]
-// function MySimpleDialog({ onClose }: { onClose(): void }) {
-// 	return (
-// 		<div style={{ padding: 16 }}>
-// 			<h2>Title</h2>
-// 			<p>Description...</p>
-// 			<button onClick={onClose}>Okay</button>
-// 		</div>
-// 	)
-// }
-
 export default function RiskyButCoolAPIKeyInput() {
 	const { addToast } = useToasts()
 	const { addDialog } = useDialogs()
@@ -326,16 +219,6 @@ export default function RiskyButCoolAPIKeyInput() {
 			>
 				Show API keys and current AI model
 			</button>
-			{/* <div>
-				<button onClick={() => setModalOpen(true)}>API Keys</button>
-				{isModalOpen && (
-					<div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-						<div style={{ background: 'white', borderRadius: 8, padding: 16, width: 400 }}>
-							<APIKeysModal onClose={() => setModalOpen(false)} />
-						</div>
-					</div>
-				)}
-			</div> */}
 			<button
 				onClick={() => {
 					addDialog({
@@ -347,20 +230,8 @@ export default function RiskyButCoolAPIKeyInput() {
 					})
 				}}
 			>
-				Show simple dialog
+				RiskyButCoolAPIKeyInput
 			</button>
 		</div>
 	)
 }
-
-// const components: TLComponents = {
-// 	SharePanel: CustomSharePanel,
-// }
-
-// export default function RiskyButCoolAPIKeyInput() {
-// 	return (
-// 		<div className="tldraw__editor">
-// 			<Tldraw components={components} persistenceKey="example" />
-// 		</div>
-// 	)
-// }

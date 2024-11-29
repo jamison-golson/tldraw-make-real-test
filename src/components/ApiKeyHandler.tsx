@@ -39,6 +39,18 @@ function ApiKeyHandler({ onClose }: { onClose(): void }) {
 	const providerModels = {
 		'Anthropic': ['claude-3-5-sonnet-latest', 'claude-3-5-haiku-latest', 'claude-3-opus-latest'],
 		'OpenAI': ['gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o', 'gpt-4o-mini'],
+		'Gemini': ['gemini-pro',
+			'gemini-1.5-pro-latest',
+			'gemini-1.5-flash-latest',
+			'gemini-1.5-pro-001',
+			'gemini-1.5-flash-001',
+			'gemini-1.5-pro-002',
+			'gemini-1.5-flash-002',
+			'gemini-1.5-flash-8b-latest',
+			'gemini-1.5-flash-8b-001',
+			'gemini-exp-1114',
+			'gemini-exp-1121'
+		]
 		// 'Cohere': ['command-nightly', 'command-light'],
 		// 'Mistral': ['mistral-large', 'mistral-medium'],
 	};
